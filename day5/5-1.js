@@ -35,7 +35,7 @@ function arrange(data, steps) {
     const from = x.from
     const to = x.to
 
-    const block = data[from].slice(-move).reverse()
+    const block = data[from].slice(-move)
     data[to] = data[to].concat(block)
     data[from] = data[from].slice(0, data[from].length - move)
 
