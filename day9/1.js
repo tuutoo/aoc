@@ -1,4 +1,3 @@
-const util = require('util')
 const fs = require('fs');
 // const inputFile = 'sample1.txt';
 const inputFile = 'input.txt';
