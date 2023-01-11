@@ -1,5 +1,4 @@
 import * as fs from 'fs'
-import { threadId } from 'worker_threads'
 
 const inputFile: string = 'input.txt'
 
@@ -27,11 +26,18 @@ abstract class Monkey {
   worriedItems: number[] = []
   testResults: boolean[] = []
   throwTo: number[] = []
+  divider: number = 0
 
   constructor() {}
 
   abstract operation(): void
   abstract test(): void
+
+  updateWorriedItem() {
+    // this magic_number is the product of each monkey's divider
+    let magic_number = 11 * 3 * 5 * 7 * 19 * 2 * 13 * 17
+    this.worriedItems = this.newItems.map(x => x % magic_number)
+  }
 
   throw() {
     this.worriedItems.map((item, index) => {
@@ -50,7 +56,7 @@ abstract class Monkey {
   }
 
   play() {
-    console.log(`playing ${this.id}`)
+    // console.log(`playing ${this.id}`)
     this.operation()
     this.test()
     this.throw()
@@ -62,16 +68,17 @@ class Monkey0 extends Monkey {
   constructor() {
     super()
     this.id = 0
+    this.divider = 11
   }
 
   operation() {
     this.startingItems = sharedBucket[this.id]
     this.newItems = this.startingItems.map(x => x * 17)
-    this.worriedItems = this.newItems.map(x => Math.floor(x / 3))
+    this.updateWorriedItem()
   }
 
   test() {
-    this.testResults = this.worriedItems.map(x => (x % 11 === 0))
+    this.testResults = this.worriedItems.map(x => (x % this.divider === 0))
     this.throwTo = this.testResults.map(x => x === true ? 2 : 3)
   }
 }
@@ -80,16 +87,17 @@ class Monkey1 extends Monkey {
   constructor() {
     super()
     this.id = 1
+    this.divider = 3
   }
 
   operation() {
     this.startingItems = sharedBucket[this.id]
     this.newItems = this.startingItems.map(x => x + 7)
-    this.worriedItems = this.newItems.map(x => Math.floor(x / 3))
+    this.updateWorriedItem()
   }
 
   test() {
-    this.testResults = this.worriedItems.map(x => (x % 3 === 0))
+    this.testResults = this.worriedItems.map(x => (x % this.divider === 0))
     this.throwTo = this.testResults.map(x => x === true ? 6 : 5)
   }
 }
@@ -98,16 +106,17 @@ class Monkey2 extends Monkey {
   constructor() {
     super()
     this.id = 2
+    this.divider = 5
   }
 
   operation() {
     this.startingItems = sharedBucket[this.id]
     this.newItems = this.startingItems.map(x => x * x)
-    this.worriedItems = this.newItems.map(x => Math.floor(x / 3))
+    this.updateWorriedItem()
   }
 
   test() {
-    this.testResults = this.worriedItems.map(x => (x % 5 === 0))
+    this.testResults = this.worriedItems.map(x => (x % this.divider === 0))
     this.throwTo = this.testResults.map(x => x === true ? 1 : 7)
   }
 }
@@ -116,16 +125,17 @@ class Monkey3 extends Monkey {
   constructor() {
     super()
     this.id = 3
+    this.divider = 7
   }
 
   operation() {
     this.startingItems = sharedBucket[this.id]
     this.newItems = this.startingItems.map(x => x + 1)
-    this.worriedItems = this.newItems.map(x => Math.floor(x / 3))
+    this.updateWorriedItem()
   }
 
   test() {
-    this.testResults = this.worriedItems.map(x => (x % 7 === 0))
+    this.testResults = this.worriedItems.map(x => (x % this.divider === 0))
     this.throwTo = this.testResults.map(x => x === true ? 2 : 7)
   }
 }
@@ -134,16 +144,17 @@ class Monkey4 extends Monkey {
   constructor() {
     super()
     this.id = 4
+    this.divider = 19
   }
 
   operation() {
     this.startingItems = sharedBucket[this.id]
     this.newItems = this.startingItems.map(x => x * 3)
-    this.worriedItems = this.newItems.map(x => Math.floor(x / 3))
+    this.updateWorriedItem()
   }
 
   test() {
-    this.testResults = this.worriedItems.map(x => (x % 19 === 0))
+    this.testResults = this.worriedItems.map(x => (x % this.divider === 0))
     this.throwTo = this.testResults.map(x => x === true ? 0 : 3)
   }
 }
@@ -152,16 +163,17 @@ class Monkey5 extends Monkey {
   constructor() {
     super()
     this.id = 5
+    this.divider = 2
   }
 
   operation() {
     this.startingItems = sharedBucket[this.id]
     this.newItems = this.startingItems.map(x => x + 4)
-    this.worriedItems = this.newItems.map(x => Math.floor(x / 3))
+    this.updateWorriedItem()
   }
 
   test() {
-    this.testResults = this.worriedItems.map(x => (x % 2 === 0))
+    this.testResults = this.worriedItems.map(x => (x % this.divider === 0))
     this.throwTo = this.testResults.map(x => x === true ? 6 : 4)
   }
 }
@@ -170,16 +182,17 @@ class Monkey6 extends Monkey {
   constructor() {
     super()
     this.id = 6
+    this.divider = 13
   }
 
   operation() {
     this.startingItems = sharedBucket[this.id]
     this.newItems = this.startingItems.map(x => x + 8)
-    this.worriedItems = this.newItems.map(x => Math.floor(x / 3))
+    this.updateWorriedItem()
   }
 
   test() {
-    this.testResults = this.worriedItems.map(x => (x % 13 === 0))
+    this.testResults = this.worriedItems.map(x => (x % this.divider === 0))
     this.throwTo = this.testResults.map(x => x === true ? 4 : 0)
   }
 }
@@ -188,16 +201,17 @@ class Monkey7 extends Monkey {
   constructor() {
     super()
     this.id = 7
+    this.divider = 17
   }
 
   operation() {
     this.startingItems = sharedBucket[this.id]
     this.newItems = this.startingItems.map(x => x + 6)
-    this.worriedItems = this.newItems.map(x => Math.floor(x / 3))
+    this.updateWorriedItem()
   }
 
   test() {
-    this.testResults = this.worriedItems.map(x => (x % 17 === 0))
+    this.testResults = this.worriedItems.map(x => (x % this.divider === 0))
     this.throwTo = this.testResults.map(x => x === true ? 1 : 5)
   }
 }
@@ -211,7 +225,7 @@ let monkey5 = new Monkey5();
 let monkey6 = new Monkey6();
 let monkey7 = new Monkey7();
 
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 10000; i++) {
   monkey0.play()
   monkey1.play()
   monkey2.play()
